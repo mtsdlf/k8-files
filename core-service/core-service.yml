@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-service
+  namespace: core-service-stage 
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: core-service
+  template:
+    metadata:
+      labels:
+        app: core-service
+    spec:
+      containers:
+        - name: core-service
+          image: fersi.azurecr.io/core-service-stage:1
+          ports:
+            - containerPort: 8080  
+          resources: 
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          envFrom: 
+          - configMapRef:
+              name: core-service-config
+          - secretRef:
+              name: core-service-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: core-service-service
+  namespace: core-service-stage
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true" 
+spec:
+  type: LoadBalancer
+  selector:
+    app: core-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080 

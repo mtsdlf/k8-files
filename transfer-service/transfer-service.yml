@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-service
+  namespace: transfer-service-stage 
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: transfer-service
+  template:
+    metadata:
+      labels:
+        app: transfer-service
+    spec:
+      containers:
+        - name: transfer-service
+          image: fersi.azurecr.io/transfer-service-stage:1
+          ports:
+            - containerPort: 8080  
+          resources: 
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          envFrom: 
+          - configMapRef:
+              name: transfer-service-config
+          - secretRef:
+              name: transfer-service-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transfer-service-service
+  namespace: transfer-service-stage
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true" 
+spec:
+  type: LoadBalancer
+  selector:
+    app: transfer-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080 
