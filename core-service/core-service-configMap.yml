@@ -9,5 +9,5 @@ data:
   VALIDATOR_HOST: http://10.251.20.15
   VALIDATOR_API_ID: idApp44444444
   VALIDATOR_DEVICE_ID: idDevice333333
-  VALIDATOR_ENDPOINT: /middlfersi.azurecr.ioeware.gatewayback/api/v1/BackMiddleware/Validate_Session
+  VALIDATOR_ENDPOINT: /middleware.gatewayback/api/v1/BackMiddleware/Validate_Session
   VALIDATOR_TIMEOUT: "30000"
