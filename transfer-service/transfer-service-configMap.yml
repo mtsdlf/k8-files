@@ -5,11 +5,15 @@ metadata:
   namespace: transfer-service-stage
 data:
   CURRENT_COMMIT_ID: TEST
-  # COINAG endpoint
-  COINAG_BASE_URL: https://homoapi.bancocoinag.com
-  # Validator configs
   VALIDATOR_HOST: http://10.251.20.15
   VALIDATOR_API_ID: idApp44444444
   VALIDATOR_DEVICE_ID: idDevice333333
   VALIDATOR_ENDPOINT: /middleware.gatewayback/api/v1/BackMiddleware/Validate_Session
   VALIDATOR_TIMEOUT: "30000"
+  CORE_SERVICE_BASE_URL: http://10.224.0.111/core/api/v1
+  CVU_RESOURCE: /cvu
+  REMUNERATED_ACCOUNT_CVU: "0000449100000000009755"
+  BALANCE_ENDPOINT: /balance
+  COINAG_BASE_URL: https://homoapi.bancocoinag.com
+  COINAG_AUTH_ENDPOINT: /token
+  COINAG_GRANT_TYPE: password
